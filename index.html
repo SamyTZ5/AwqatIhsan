@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mawaqit V15 - Ultimate</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@500;700&family=Oswald:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #1a2530; 
+      --card-bg: rgba(255, 255, 255, 0.08); 
+      --card-border: rgba(255, 255, 255, 0.15);
+      --gold: #d4af37; 
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-color);
+      background-position: center; background-size: cover; background-repeat: no-repeat;
+      color: var(--white); font-family: 'Inter', sans-serif;
+      height: 100vh; overflow: hidden; display: flex; flex-direction: column;
+    }
+    body::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.65); z-index: -1;
+    }
+
+    /* ECRAN DEMARRAGE */
+    #startScreen {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: #000; z-index: 9999;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      cursor: pointer; transition: opacity 0.5s;
+    }
+    .start-btn {
+      padding: 15px 40px; border: 2px solid var(--gold); color: var(--gold);
+      font-size: 18px; text-transform: uppercase; border-radius: 50px; background: transparent;
+      margin-top: 20px; font-weight: bold;
+    }
+
+    /* CONTROLS (Gauche) */
+    .controls-area {
+      position: absolute; bottom: 20px; left: 20px; display: flex; gap: 10px; z-index: 1000; opacity: 0.5; transition: 0.3s;
+    }
+    .controls-area:hover { opacity: 1; }
+    .ctrl-btn {
+      background: #222; color: #fff; border: 1px solid #444; border-radius: 8px; 
+      width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .ctrl-btn:hover { background: var(--gold); color: #000; }
+    .playing { background: var(--gold); color: #000; animation: pulse 1s infinite; }
+    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+    /* LOGO INSTITUT (Droite) */
+    .ihsan-logo {
+      position: absolute; bottom: 20px; right: 20px; width: 90px; z-index: 900;
+      opacity: 0.8; transition: 0.3s;
+    }
+    .ihsan-logo:hover { opacity: 1; transform: scale(1.05); }
+    .ihsan-logo img { width: 100%; display: block; }
+
+    /* POWERED BY (Centre Bas) */
+    .powered-by {
+      position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
+      z-index: 900; display: flex; flex-direction: column; align-items: center;
+      opacity: 0.6; transition: 0.3s; text-decoration: none;
+    }
+    .powered-by:hover { opacity: 1; }
+    .powered-text { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; color: #888; }
+    .powered-logo { height: 40px; width: auto; }
+
+    /* HEADER */
+    .header {
+      height: 32vh; display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 40px 60px 0 60px;
+    }
+    .mosque-info h1 {
+      font-family: 'Playfair Display', serif; font-size: 3.5vw; color: var(--gold); 
+      margin-bottom: 5px; text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+    .mosque-info p { 
+      font-size: 1.4vw; color: rgba(255,255,255,0.9); font-weight: 300; 
+      background: rgba(0,0,0,0.3); padding: 5px 15px; border-radius: 20px; display: inline-flex; align-items: center; gap: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    /* Statut synchro intégré */
+    .sync-dot { width: 10px; height: 10px; border-radius: 50%; background: orange; display: inline-block; box-shadow: 0 0 5px orange; }
+
+    .clock-container { text-align: right; }
+    .main-time { 
+      font-family: 'Oswald', sans-serif; font-size: 8vw; line-height: 0.9; font-weight: 500;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .date-display { font-size: 1.5vw; color: rgba(255,255,255,0.8); margin-top: 5px; }
+    .countdown-line {
+      font-family: 'Inter', sans-serif; font-size: 1.2vw; color: var(--gold); 
+      text-transform: uppercase; letter-spacing: 1.5px; margin-top: 10px; font-weight: 600;
+      background: rgba(0, 0, 0, 0.4); padding: 6px 16px; border-radius: 20px;
+      border: 1px solid rgba(212, 175, 55, 0.3); display: inline-block;
+    }
+
+    /* GRILLE */
+    .prayers-grid {
+      flex: 1; display: flex; justify-content: center; align-items: center;
+      padding: 0 60px 80px 60px; gap: 20px; z-index: 10;
+    }
+    .prayer-card {
+      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; 
+      height: 60%; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
+      position: relative; transition: all 0.4s ease; backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .prayer-name { 
+      font-family: 'Playfair Display', serif; font-size: 1.8vw; font-weight: 500; 
+      margin-bottom: 10px; color: rgba(255,255,255,0.7); 
+    }
+    .prayer-time { font-family: 'Oswald', sans-serif; font-size: 4.5vw; color: var(--white); }
+
+    .prayer-card.active {
+      background: var(--white); transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.5); border-color: var(--white);
+    }
+    .prayer-card.active .prayer-name { color: #1a2530; font-weight: 700; }
+    .prayer-card.active .prayer-time { color: #d4af37; }
+    .prayer-card.active::after {
+      content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 6px;
+      background: var(--gold); border-radius: 0 0 12px 12px;
+    }
+
+    /* MODAL */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
+    .modal-content { background: #151b22; padding: 30px; border-radius: 12px; width: 90%; max-width: 600px; border: 1px solid #333; max-height: 90vh; overflow-y: auto; color: #fff; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-size: 12px; color: var(--gold); margin-bottom: 5px; text-transform: uppercase; }
+    .form-group input, .form-group select { width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #fff; border-radius: 6px; }
+    .btn { width: 100%; padding: 12px; margin-top: 10px; background: var(--gold); border: none; font-weight: bold; cursor: pointer; border-radius: 6px; }
+    
+    /* CONSOLE DEBUG */
+    #debugConsole {
+      display: none; background: #000; color: #0f0; font-family: monospace; padding: 15px; 
+      height: 200px; overflow-y: scroll; border: 1px solid #333; margin-top: 15px; font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="startScreen" onclick="unlockAudio()">
+    <div style="font-size:60px; margin-bottom:10px;">🕌</div>
+    <div style="color:var(--gold); font-size:24px; font-family:'Playfair Display'">Bismillah</div>
+    <button class="start-btn">Entrer</button>
+  </div>
+
+  <audio id="adhanFajr" preload="auto"></audio>
+  <audio id="adhanNormal" preload="auto"></audio>
+
+  <div class="controls-area">
+    <button class="ctrl-btn" onclick="openSettings()">⚙️</button>
+    <button class="ctrl-btn" id="btnTestFajr" onclick="toggleAudio('fajr')">F</button>
+    <button class="ctrl-btn" id="btnTestNormal" onclick="toggleAudio('normal')">🔊</button>
+  </div>
+
+  <a href="https://www.institut-ihsan.org/" target="_blank" class="ihsan-logo">
+    <img src="https://www.institut-ihsan.org/wp-content/uploads/2023/05/Logo-institut-ihsan-400x400.png" alt="Ihsan">
+  </a>
+
+  <a href="https://www.salatcalendar.com/index.php" target="_blank" class="powered-by">
+    <span class="powered-text">Powered by</span>
+    <img class="powered-logo" src="https://i.ibb.co/tMZQCCcM/Capture-d-cran-2025-12-30-210457-removebg-preview.png" alt="SalatCalendar">
+  </a>
+
+  <div id="settingsModal" class="modal">
+    <div class="modal-content">
+      <h2 style="color:var(--gold); margin-bottom:20px;">Configuration</h2>
+      
+      <div class="form-group">
+        <label>Ville (Recherche)</label>
+        <input list="cityList" id="cityInput" placeholder="Tapez votre ville..." onchange="updateIdFromCity()">
+        <datalist id="cityList"></datalist>
+      </div>
+
+      <div class="form-group">
+        <label>ID SalatCalendar</label>
+        <input id="confIdInput" type="text" placeholder="2571">
+      </div>
+
+      <div class="form-group">
+        <label>Nom Affiché</label>
+        <input id="confName" type="text" placeholder="Ex: Institut Ihsan">
+      </div>
+
+      <div class="form-group">
+        <label>Son Fajr</label>
+        <select id="selFajr" onchange="checkCustomAudio('Fajr')">
+          <option value="">Silencieux</option>
+          <option value="http://www.islamcan.com/audio/adhan/azan2.mp3">Makkah</option>
+          <option value="http://www.islamcan.com/audio/adhan/azan1.mp3">Standard</option>
+          <option value="custom">Lien MP3...</option>
+        </select>
+        <input id="custFajr" type="text" placeholder="https://..." style="display:none; margin-top:5px;">
+      </div>
+
+      <div class="form-group">
+        <label>Son Autres</label>
+        <select id="selNormal" onchange="checkCustomAudio('Normal')">
+          <option value="">Silencieux</option>
+          <option value="http://www.islamcan.com/audio/adhan/azan3.mp3">Yusuf Islam</option>
+          <option value="http://www.islamcan.com/audio/adhan/azan20.mp3">Egypte</option>
+          <option value="custom">Lien MP3...</option>
+        </select>
+        <input id="custNormal" type="text" placeholder="https://..." style="display:none; margin-top:5px;">
+      </div>
+
+      <div class="form-group">
+        <label>Fond d'écran (URL)</label>
+        <input id="confBg" type="text" placeholder="https://...">
+      </div>
+      
+      <button class="btn" style="background:#555; font-size:12px;" onclick="toggleConsole()">Ouvrir Console Debug</button>
+      <div id="debugConsole">LOGS DU SYSTÈME:<br></div>
+
+      <button class="btn" onclick="saveSettings()">ENREGISTRER</button>
+      <button class="btn" style="background:#333; color:#fff" onclick="closeSettings()">FERMER</button>
+    </div>
+  </div>
+
+  <div class="header">
+    <div class="mosque-info">
+      <h1 id="displayTitle">Institut Ihsan</h1>
+      <p>
+        <span id="syncDot" class="sync-dot" title="Orange: Calcul Math / Vert: Synchro OK"></span>
+        <span id="displaySource" style="margin-left:10px;">ID : 2571 - Petit-Quevilly</span>
+      </p>
+    </div>
+    <div class="clock-container">
+      <div class="main-time" id="digitalClock">--:--</div>
+      <div class="date-display" id="dateDisplay">--/--/----</div>
+      <div id="countdown" class="countdown-line">--:--:--</div>
+    </div>
+  </div>
+
+  <div class="prayers-grid">
+    <div class="prayer-card" id="card-fajr"><div class="prayer-name">Fajr</div><div class="prayer-time" id="time-fajr">--:--</div></div>
+    <div class="prayer-card" id="card-dohr"><div class="prayer-name">Dohr</div><div class="prayer-time" id="time-dohr">--:--</div></div>
+    <div class="prayer-card" id="card-asr"><div class="prayer-name">Asr</div><div class="prayer-time" id="time-asr">--:--</div></div>
+    <div class="prayer-card" id="card-maghrib"><div class="prayer-name">Maghrib</div><div class="prayer-time" id="time-maghrib">--:--</div></div>
+    <div class="prayer-card" id="card-isha"><div class="prayer-name">Isha</div><div class="prayer-time" id="time-isha">--:--</div></div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/adhan@4.4.0/lib/adhan.umd.min.js"></script>
+
+<script>
+  // --- LOGGING ---
+  function debug(msg) {
+    const d = new Date();
+    const time = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+    const line = `[${time}] ${msg}<br>`;
+    const c = document.getElementById('debugConsole');
+    c.innerHTML += line;
+    c.scrollTop = c.scrollHeight;
+    console.log(msg);
+  }
+
+  // --- VILLES ÉTENDUES ---
+  const CITIES = [
+    {name: "Petit-Quevilly (Ihsan)", id: "2571", lat: 49.43, lng: 1.07},
+    {name: "Rouen (El-Mohsinine)", id: "2568", lat: 49.44, lng: 1.09},
+    {name: "Paris (Grande Mosquée)", id: "2572", lat: 48.85, lng: 2.35},
+    {name: "Marseille", id: "2601", lat: 43.29, lng: 5.36},
+    {name: "Lyon", id: "2598", lat: 45.76, lng: 4.83},
+    {name: "Toulouse", id: "2621", lat: 43.60, lng: 1.44},
+    {name: "Nice", id: "2610", lat: 43.71, lng: 7.26},
+    {name: "Nantes", id: "2606", lat: 47.21, lng: -1.55},
+    {name: "Strasbourg", id: "2618", lat: 48.57, lng: 7.75},
+    {name: "Montpellier", id: "2604", lat: 43.61, lng: 3.87},
+    {name: "Bordeaux", id: "2578", lat: 44.83, lng: -0.57},
+    {name: "Lille", id: "2589", lat: 50.62, lng: 3.05},
+    {name: "Rennes", id: "2615", lat: 48.11, lng: -1.67},
+    {name: "Reims", id: "2614", lat: 49.25, lng: 4.03},
+    {name: "Le Havre", id: "2587", lat: 49.49, lng: 0.10},
+    {name: "Saint-Etienne", id: "2617", lat: 45.43, lng: 4.38},
+    {name: "Toulon", id: "2620", lat: 43.12, lng: 5.93},
+    {name: "Grenoble", id: "2586", lat: 45.18, lng: 5.72},
+    {name: "Dijon", id: "2583", lat: 47.32, lng: 5.04},
+    {name: "Angers", id: "2574", lat: 47.47, lng: -0.56},
+    {name: "Nîmes", id: "2607", lat: 43.83, lng: 4.36},
+    {name: "Villeurbanne", id: "2623", lat: 45.77, lng: 4.88},
+    {name: "Saint-Denis", id: "2572", lat: 48.93, lng: 2.36},
+    {name: "Clermont-Ferrand", id: "2581", lat: 45.77, lng: 3.08},
+    {name: "Le Mans", id: "2630", lat: 48.00, lng: 0.19},
+    {name: "Aix-en-Provence", id: "2573", lat: 43.52, lng: 5.44},
+    {name: "Brest", id: "2579", lat: 48.39, lng: -4.48},
+    {name: "Tours", id: "2622", lat: 47.39, lng: 0.68},
+    {name: "Amiens", id: "2575", lat: 49.89, lng: 2.29},
+    {name: "Limoges", id: "2590", lat: 45.83, lng: 1.26},
+    {name: "Annecy", id: "2631", lat: 45.89, lng: 6.12},
+    {name: "Perpignan", id: "2611", lat: 42.68, lng: 2.89},
+    {name: "Boulogne-Billancourt", id: "2572", lat: 48.83, lng: 2.24},
+    {name: "Metz", id: "2596", lat: 49.11, lng: 6.17},
+    {name: "Besançon", id: "2577", lat: 47.23, lng: 6.02},
+    {name: "Orléans", id: "2609", lat: 47.90, lng: 1.90},
+    {name: "Mulhouse", id: "2605", lat: 47.75, lng: 7.33},
+    {name: "Caen", id: "2580", lat: 49.18, lng: -0.37},
+    {name: "Roubaix", id: "2589", lat: 50.69, lng: 3.17},
+    {name: "Nancy", id: "2603", lat: 48.69, lng: 6.18},
+    {name: "Argenteuil", id: "2572", lat: 48.94, lng: 2.24},
+    {name: "Montreuil", id: "2572", lat: 48.86, lng: 2.44},
+    {name: "Saint-Paul", id: "2632", lat: -21.00, lng: 55.27},
+    {name: "Roubaix", id: "2589", lat: 50.69, lng: 3.17},
+    {name: "Tourcoing", id: "2589", lat: 50.72, lng: 3.15},
+    {name: "Nanterre", id: "2572", lat: 48.89, lng: 2.20},
+    {name: "Avignon", id: "2576", lat: 43.94, lng: 4.80},
+    {name: "Vitry-sur-Seine", id: "2572", lat: 48.78, lng: 2.39},
+    {name: "Créteil", id: "2572", lat: 48.79, lng: 2.46},
+    {name: "Poitiers", id: "2612", lat: 46.58, lng: 0.34},
+    {name: "Aubervilliers", id: "2572", lat: 48.91, lng: 2.38},
+    {name: "Dunkerque", id: "2584", lat: 51.03, lng: 2.37},
+    {name: "Aulnay-sous-Bois", id: "2572", lat: 48.93, lng: 2.49},
+    {name: "Colombes", id: "2572", lat: 48.92, lng: 2.25},
+    {name: "Asnières-sur-Seine", id: "2572", lat: 48.91, lng: 2.28},
+    {name: "Versailles", id: "2572", lat: 48.80, lng: 2.13},
+    {name: "Saint-Pierre", id: "2633", lat: -21.33, lng: 55.47},
+    {name: "Courbevoie", id: "2572", lat: 48.89, lng: 2.24},
+    {name: "Cherbourg-en-Cotentin", id: "2634", lat: 49.63, lng: -1.62},
+    {name: "Rueil-Malmaison", id: "2572", lat: 48.87, lng: 2.18},
+    {name: "Pau", id: "2608", lat: 43.29, lng: -0.37},
+    {name: "Champigny-sur-Marne", id: "2572", lat: 48.81, lng: 2.51},
+    {name: "La Rochelle", id: "2585", lat: 46.16, lng: -1.15},
+    {name: "Calais", id: "2589", lat: 50.95, lng: 1.85}
+  ];
+
+  // CONFIG DEFAULT
+  const DEFAULT_BG = "https://www.barcelo.com/guia-turismo/wp-content/uploads/2022/10/mezquita-hassan-ii.jpg";
+  let config = { 
+    manualName: "", id: "2571", 
+    bgUrl: DEFAULT_BG,
+    urlFajr: "http://www.islamcan.com/audio/adhan/azan2.mp3",
+    urlNormal: "http://www.islamcan.com/audio/adhan/azan1.mp3",
+    lat: 49.43, lng: 1.07, cityName: "Petit-Quevilly"
+  };
+
+  let currentTimes = {};
+  let lastAdhanPlayed = "";
+  let nextPrayerTimeObj = null;
+
+  // --- INIT ---
+  function init() {
+    debug("Initialisation...");
+    loadSettings();
+    populateCities();
+    
+    // 1. CALCUL MATH (Immédiat)
+    calculateMathFallback(); 
+    updateLabels();
+    
+    // 2. SCRAPING (Différé)
+    setTimeout(fetchTimes, 1000); 
+
+    setInterval(updateClock, 1000);
+    setInterval(fetchTimes, 300000); // Sync 5min
+  }
+
+  function unlockAudio() {
+    const screen = document.getElementById('startScreen');
+    screen.style.opacity = '0';
+    setTimeout(() => { screen.style.display = 'none'; }, 500);
+    const a1 = document.getElementById('adhanFajr');
+    const a2 = document.getElementById('adhanNormal');
+    a1.load(); a2.load();
+    // Play silence
+    a1.play().then(() => { a1.pause(); a1.currentTime=0; }).catch(e=>debug("Autoplay err: "+e));
+    debug("Audio débloqué par utilisateur");
+  }
+
+  // --- SETTINGS ---
+  function loadSettings() {
+    const s = localStorage.getItem('mawaqitV15');
+    if(s) {
+      const p = JSON.parse(s);
+      config = { ...config, ...p };
+    }
+    applyConfig();
+  }
+
+  function applyConfig() {
+    document.body.style.backgroundImage = `url('${config.bgUrl || DEFAULT_BG}')`;
+    document.getElementById('adhanFajr').src = config.urlFajr;
+    document.getElementById('adhanNormal').src = config.urlNormal;
+    document.getElementById('confName').value = config.manualName;
+    document.getElementById('confIdInput').value = config.id;
+    document.getElementById('confBg').value = config.bgUrl;
+    
+    setSelect('selFajr', 'custFajr', config.urlFajr);
+    setSelect('selNormal', 'custNormal', config.urlNormal);
+    
+    updateLabels();
+  }
+
+  function updateLabels() {
+    // Si la config a déjà lat/lng/name via le saveSettings, on utilise, sinon on cherche dans CITIES
+    const c = CITIES.find(x => x.id === config.id);
+    let displayCity = config.cityName;
+    if(c) displayCity = c.name;
+    
+    document.getElementById('displayTitle').textContent = config.manualName || "Institut Ihsan";
+    document.getElementById('displaySource').innerHTML = `ID : ${config.id} &nbsp;|&nbsp; ${displayCity}`;
+  }
+
+  function saveSettings() {
+    const getVal = (s, c) => {
+        const v = document.getElementById(s).value;
+        return v === 'custom' ? document.getElementById(c).value : v;
+    };
+    
+    config.manualName = document.getElementById('confName').value;
+    
+    // Traitement ID
+    let rawId = document.getElementById('confIdInput').value.trim();
+    const match = rawId.match(/\/prayer_widget\/(\d+)\//);
+    if(match) rawId = match[1];
+    config.id = rawId;
+
+    config.bgUrl = document.getElementById('confBg').value;
+    config.urlFajr = getVal('selFajr', 'custFajr');
+    config.urlNormal = getVal('selNormal', 'custNormal');
+    
+    // Maj Coords si ville connue dans la liste
+    const c = CITIES.find(x => x.id === config.id);
+    if(c) {
+        config.lat = c.lat;
+        config.lng = c.lng;
+        config.cityName = c.name;
+    }
+
+    localStorage.setItem('mawaqitV15', JSON.stringify(config));
+    applyConfig();
+    calculateMathFallback();
+    fetchTimes();
+    closeSettings();
+  }
+
+  function setSelect(selId, custId, val) {
+    const s = document.getElementById(selId);
+    const c = document.getElementById(custId);
+    let found = false;
+    for(let i=0; i<s.options.length; i++) {
+        if(s.options[i].value === val) { s.selectedIndex = i; found = true; break; }
+    }
+    if(!found && val) { 
+        s.value = 'custom'; 
+        c.style.display = 'block'; 
+        c.value = val; 
+    } else { 
+        c.style.display = 'none'; 
+    }
+  }
+
+  function checkCustomAudio(t) {
+    const v = document.getElementById('sel'+t).value;
+    document.getElementById('cust'+t).style.display = (v === 'custom') ? 'block' : 'none';
+  }
+
+  // --- AUDIO LOGIC ---
+  function toggleAudio(type) {
+    const p = document.getElementById(type === 'fajr' ? 'adhanFajr' : 'adhanNormal');
+    const btn = document.getElementById(type === 'fajr' ? 'btnTestFajr' : 'btnTestNormal');
+    
+    if(!p.paused) {
+        p.pause(); p.currentTime = 0;
+        btn.classList.remove('playing');
+        debug("Audio arrêté");
+    } else {
+        // Stop other first
+        const other = document.getElementById(type === 'fajr' ? 'adhanNormal' : 'adhanFajr');
+        other.pause(); other.currentTime = 0;
+        document.getElementById('btnTestFajr').classList.remove('playing');
+        document.getElementById('btnTestNormal').classList.remove('playing');
+        
+        p.play().catch(e => { alert("Erreur audio: " + e); debug("Audio play err: "+e); });
+        btn.classList.add('playing');
+        debug("Audio test lancé: " + type);
+        
+        p.onended = () => btn.classList.remove('playing');
+    }
+  }
+
+  // --- MATH ENGINE (ADHAN.JS) ---
+  function calculateMathFallback() {
+    if(typeof adhan === 'undefined') { debug("AdhanLib manquante"); return; }
+
+    const date = new Date();
+    const coords = new adhan.Coordinates(config.lat, config.lng);
+    const params = adhan.CalculationMethod.MuslimWorldLeague(); 
+    params.madhab = adhan.Madhab.Shafi;
+    params.fajrAngle = 18; params.ishaAngle = 18;
+    // Petit ajustement manuel souvent nécessaire par rapport à SalatCalendar
+    // params.adjustments.fajr = 2; 
+
+    const p = new adhan.PrayerTimes(coords, date, params);
+    const fmt = (d) => d.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+
+    currentTimes = {
+        fajr: fmt(p.fajr), dohr: fmt(p.dhuhr), asr: fmt(p.asr),
+        maghrib: fmt(p.maghrib), isha: fmt(p.isha)
+    };
+    renderTimes();
+    recalcNextPrayer();
+    
+    document.getElementById('syncDot').style.background = "orange";
+    document.getElementById('syncDot').title = "Mode Mathématique (Hors ligne)";
+    debug("Calcul mathématique appliqué (" + config.cityName + ")");
+  }
+
+  // --- SCRAPING ENGINE ---
+  const PROXY = "https://corsproxy.io/?"; 
+  async function fetchTimes() {
+    debug("Tentative synchro web ID " + config.id + "...");
+    const URL = `https://www.salatcalendar.com/index.php/EmbededPrayer/prayer_widget/${config.id}/en/2/light`;
+    
+    try {
+      const res = await fetch(PROXY + encodeURIComponent(URL));
+      if(!res.ok) throw new Error("Proxy error " + res.status);
+      const html = await res.text();
+      
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+      const tds = Array.from(doc.querySelectorAll('td'));
+      const timeRegex = /^\s*\d{1,2}:\d{2}\s*$/;
+      const times = tds.map(t => t.textContent.trim()).filter(t => timeRegex.test(t));
+      
+      if(times.length >= 6) {
+        currentTimes = { fajr: times[0], dohr: times[2], asr: times[3], maghrib: times[4], isha: times[5] };
+        renderTimes();
+        recalcNextPrayer();
+        document.getElementById('syncDot').style.background = "#0f0";
+        document.getElementById('syncDot').title = "Synchro Web OK";
+        document.getElementById('syncDot').style.boxShadow = "0 0 8px #0f0";
+        debug("Synchro Web RÉUSSIE !");
+      } else {
+        throw new Error("HTML reçu mais pas d'heures");
+      }
+    } catch(e) {
+      debug("Echec synchro web (" + e.message + "). On garde les maths.");
+    }
+  }
+
+  function renderTimes() {
+    ['fajr','dohr','asr','maghrib','isha'].forEach(k => {
+      const el = document.getElementById(`time-${k}`);
+      if(el) el.textContent = currentTimes[k];
+    });
+  }
+
+  // --- UI LOGIC ---
+  function recalcNextPrayer() {
+    if(!currentTimes.fajr) return;
+    const now = new Date();
+    const ids = ['fajr','dohr','asr','maghrib','isha'];
+    nextPrayerTimeObj = null;
+    for(let id of ids) {
+      const [h, m] = currentTimes[id].split(':').map(Number);
+      const pDate = new Date(); pDate.setHours(h, m, 0, 0);
+      if(pDate > now) { nextPrayerTimeObj = pDate; break; }
+    }
+    if(!nextPrayerTimeObj) {
+      const [h, m] = currentTimes['fajr'].split(':').map(Number);
+      const pDate = new Date(); pDate.setDate(pDate.getDate() + 1);
+      pDate.setHours(h, m, 0, 0);
+      nextPrayerTimeObj = pDate;
+    }
+  }
+
+  function checkTriggers() {
+    if(!currentTimes.fajr) return;
+    const now = new Date();
+    const curMins = now.getHours() * 60 + now.getMinutes();
+    const ids = ['fajr','dohr','asr','maghrib','isha'];
+    let activeId = 'fajr';
+
+    for(let id of ids) {
+      const [h, m] = currentTimes[id].split(':').map(Number);
+      if((h*60+m) > curMins) { activeId = id; break; }
+      
+      if(now.getHours() === h && now.getMinutes() === m && now.getSeconds() < 2) {
+        if(lastAdhanPlayed !== id) {
+          const p = document.getElementById(id === 'fajr' ? 'adhanFajr' : 'adhanNormal');
+          p.play().catch(e=>debug("Autoplay block"));
+          lastAdhanPlayed = id;
+        }
+      }
+    }
+    const [ih, im] = currentTimes['isha'].split(':').map(Number);
+    if(curMins >= (ih*60+im)) activeId = 'fajr';
+
+    document.querySelectorAll('.prayer-card').forEach(c => c.classList.remove('active'));
+    document.getElementById(`card-${activeId}`).classList.add('active');
+  }
+
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('digitalClock').innerText = now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+    document.getElementById('dateDisplay').innerText = now.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+
+    const cdEl = document.getElementById('countdown');
+    if(nextPrayerTimeObj) {
+        const diff = nextPrayerTimeObj - now;
+        if(diff > 0) {
+            const h = Math.floor(diff / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            const ss = s.toString().padStart(2, '0');
+            const mm = m.toString().padStart(2, '0');
+            cdEl.innerHTML = `PROCHAINE DANS <span style="color:#fff">${h}:${mm}:${ss}</span>`;
+        } else {
+            cdEl.textContent = "C'EST L'HEURE";
+            recalcNextPrayer();
+        }
+    }
+    checkTriggers();
+  }
+
+  // --- UTILS UI ---
+  function populateCities() {
+    const dl = document.getElementById('cityList');
+    CITIES.forEach(c => {
+        let op = document.createElement('option');
+        op.value = c.name;
+        dl.appendChild(op);
+    });
+  }
+  function updateIdFromCity() {
+    const val = document.getElementById('cityInput').value;
+    const c = CITIES.find(x => x.name === val);
+    if(c) document.getElementById('confIdInput').value = c.id;
+  }
+  function openSettings() { document.getElementById('settingsModal').style.display = 'flex'; }
+  function closeSettings() { document.getElementById('settingsModal').style.display = 'none'; }
+  function toggleConsole() {
+     const c = document.getElementById('debugConsole');
+     c.style.display = c.style.display === 'block' ? 'none' : 'block';
+  }
+
+  init();
+</script>
+</body>
+</html>
