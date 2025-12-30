@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Awqat - Institut Ihsan (V1)</title>
+  <title>Awqat - Institut Ihsan (V2)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@500;700&family=Oswald:wght@400;500&display=swap" rel="stylesheet">
@@ -22,13 +22,14 @@
 
     body {
       background-color: var(--bg-color);
-      background-position: center; background-size: cover; background-repeat: no-repeat;
+      background-position: center; background-size: cover; background-repeat: no-repeat; background-attachment: fixed;
       color: var(--white); font-family: 'Inter', sans-serif;
       height: 100vh; overflow: hidden; display: flex; flex-direction: column;
     }
     body::before {
       content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0, 0, 0, 0.75); z-index: -1;
+      position: fixed;
     }
 
     /* --- ECRAN DEMARRAGE / ONBOARDING --- */
@@ -65,7 +66,7 @@
 
     /* HEADER */
     .top-section {
-      height: 20vh; /* Réduit un peu le header pour laisser de la place au centre */
+      height: 20vh;
       display: flex; justify-content: space-between; align-items: flex-end;
       padding: 30px 60px 0 60px; z-index: 10;
     }
@@ -101,14 +102,14 @@
     .date-gregorian { font-size: 1.2vw; color: #fff; font-weight: 400; display: block; }
     .date-hijri { font-size: 1.1vw; color: var(--gold); font-weight: 300; display: block; font-family: 'Playfair Display', serif; font-style: italic; }
 
-    /* LAYOUT GLOBAL (CENTRAGE VERTICAL DU BLOC) */
+    /* LAYOUT GLOBAL */
     .layout-wrapper {
       width: 92%; max-width: 1600px;
       margin: 0 auto;
-      flex: 1; /* Prend tout l'espace restant */
+      flex: 1;
       display: flex; flex-direction: column; 
-      justify-content: center; /* CENTRE VERTICALEMENT TOUT LE BLOC */
-      padding-bottom: 40px; /* Petit offset pour ne pas coller en bas */
+      justify-content: center;
+      padding-bottom: 40px;
     }
 
     /* NEWS TICKER */
@@ -119,7 +120,7 @@
       border: 1px solid var(--news-border); border-radius: 8px;
       display: flex; align-items: center; overflow: hidden; position: relative;
       backdrop-filter: blur(8px);
-      margin-bottom: 25px; /* Espace avant les tuiles */
+      margin-bottom: 25px;
     }
     .news-label {
       background: rgba(255,255,255,0.08); color: var(--gold); height: 100%; padding: 0 30px;
@@ -141,7 +142,7 @@
     /* GRILLE PRIERES */
     .prayers-grid {
       display: flex; justify-content: space-between; align-items: center;
-      gap: 25px; width: 100%; height: 35vh; /* Hauteur des tuiles */
+      gap: 25px; width: 100%; height: 35vh;
     }
     .prayer-card {
       background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; 
@@ -169,6 +170,7 @@
     /* COUNTDOWN */
     .countdown-container {
       margin-top: 25px; display: flex; justify-content: center; width: 100%;
+      padding-bottom: 20px;
     }
     .countdown-line {
       font-family: 'Inter', sans-serif; font-size: 1.3vw; color: var(--white); 
@@ -179,17 +181,17 @@
     }
     .countdown-line span { color: var(--gold); }
 
-    /* FOOTER */
-    .controls-area { position: absolute; bottom: 20px; left: 20px; display: flex; gap: 10px; z-index: 1000; opacity: 0.1; transition: 0.3s; }
+    /* FOOTER & CONTROLS */
+    .controls-area { position: fixed; bottom: 20px; left: 20px; display: flex; gap: 10px; z-index: 1000; opacity: 0.1; transition: 0.3s; }
     .controls-area:hover { opacity: 1; }
     .ctrl-btn { background: #222; color: #fff; border: 1px solid #444; border-radius: 8px; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .ctrl-btn:hover { background: var(--gold); color: #000; }
     .playing { background: var(--gold); color: #000; animation: pulseBtn 1s infinite; }
     @keyframes pulseBtn { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-    .ihsan-logo { position: absolute; bottom: 20px; right: 20px; width: 80px; z-index: 900; opacity: 0.8; }
+    .ihsan-logo { position: fixed; bottom: 20px; right: 20px; width: 80px; z-index: 900; opacity: 0.8; }
     .ihsan-logo img { width: 100%; display: block; }
-    .powered-by { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); z-index: 900; display: flex; flex-direction: column; align-items: center; opacity: 0.5; transition: 0.3s; text-decoration: none; }
+    .powered-by { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); z-index: 900; display: flex; flex-direction: column; align-items: center; opacity: 0.5; transition: 0.3s; text-decoration: none; }
     .powered-by:hover { opacity: 1; }
     .powered-text { font-size: 8px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; color: #888; }
     .powered-logo { height: 35px; width: auto; }
@@ -202,6 +204,68 @@
     .form-group input, .form-group select { width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #fff; border-radius: 6px; }
     .btn { width: 100%; padding: 12px; margin-top: 10px; background: var(--gold); border: none; font-weight: bold; cursor: pointer; border-radius: 6px; }
     #debugConsole { display: none; background: #000; color: #0f0; font-family: monospace; padding: 15px; height: 150px; overflow-y: scroll; border: 1px solid #333; margin-top: 15px; font-size: 11px; }
+
+    /* --- RESPONSIVE MOBILE --- */
+    @media (max-width: 900px) {
+      body { 
+        height: auto; 
+        overflow-y: auto; 
+        padding-bottom: 100px; 
+      }
+      .top-section {
+        height: auto;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+      }
+      .mosque-info h1 { font-size: 8vw; }
+      .source-badge { font-size: 3vw; justify-content: center; }
+      #loadingMsg { font-size: 3vw; }
+      
+      .clock-container { text-align: center; margin-top: 15px; }
+      .main-time { font-size: 15vw; }
+      .date-group { text-align: center; }
+      .date-gregorian { font-size: 4vw; }
+      .date-hijri { font-size: 3.5vw; }
+
+      .layout-wrapper {
+        justify-content: flex-start;
+        padding-top: 10px;
+        width: 95%;
+      }
+
+      .news-container { margin-bottom: 20px; }
+      .news-label { min-width: 150px; padding: 0 15px; font-size: 12px; }
+      .news-content { font-size: 16px; }
+
+      .prayers-grid {
+        flex-direction: column;
+        height: auto;
+        gap: 12px;
+      }
+      .prayer-card {
+        flex-direction: row; 
+        justify-content: space-between;
+        width: 100%;
+        min-height: 70px;
+        padding: 0 25px;
+      }
+      .prayer-name { font-size: 20px; margin-bottom: 0; }
+      .prayer-time { font-size: 28px; }
+      
+      .prayer-card.active { transform: scale(1.02); }
+      .prayer-card.active::after {
+        width: 6px; height: 100%; bottom: 0; left: 0;
+        border-radius: 12px 0 0 12px;
+      }
+      
+      .countdown-line { font-size: 14px; padding: 12px 20px; width: 100%; justify-content: center; }
+
+      .powered-by { position: relative; left: auto; transform: none; margin-top: 30px; opacity: 1; }
+      .ihsan-logo { position: relative; bottom: auto; right: auto; margin: 20px auto; width: 60px; }
+      .controls-area { position: fixed; opacity: 0.5; bottom: 10px; left: 10px; }
+    }
   </style>
 </head>
 <body>
@@ -235,15 +299,6 @@
     <button class="ctrl-btn" id="btnTestFajr" onclick="toggleAudio('fajr')">F</button>
     <button class="ctrl-btn" id="btnTestNormal" onclick="toggleAudio('normal')">🔊</button>
   </div>
-
-  <a href="https://www.institut-ihsan.org/" target="_blank" class="ihsan-logo">
-    <img src="https://www.institut-ihsan.org/wp-content/uploads/2023/05/Logo-institut-ihsan-400x400.png" alt="Ihsan">
-  </a>
-
-  <a href="https://www.salatcalendar.com/index.php" target="_blank" class="powered-by">
-    <span class="powered-text">Powered by</span>
-    <img class="powered-logo" src="https://i.ibb.co/tMZQCCcM/Capture-d-cran-2025-12-30-210457-removebg-preview.png" alt="SalatCalendar">
-  </a>
 
   <div id="settingsModal" class="modal">
     <div class="modal-content">
@@ -313,8 +368,8 @@
         INFOS IHSAN
       </div>
       <div class="news-scroll-area">
-        <div class="news-content">
-          Bienvenue à l'Institut Ihsan • Prière du Vendredi à 13h00 • Les cours d'arabe reprennent le 15 Septembre • Soutenez la mosquée par vos dons • Merci d'éteindre vos téléphones.
+        <div class="news-content" id="newsTickerContent">
+          Bienvenue à l'Institut Ihsan • Chargement des actualités en cours...
         </div>
       </div>
     </div>
@@ -333,6 +388,15 @@
 
   </div>
 
+  <a href="https://www.institut-ihsan.org/" target="_blank" class="ihsan-logo">
+    <img src="https://www.institut-ihsan.org/wp-content/uploads/2023/05/Logo-institut-ihsan-400x400.png" alt="Ihsan">
+  </a>
+
+  <a href="https://www.salatcalendar.com/index.php" target="_blank" class="powered-by">
+    <span class="powered-text">Powered by</span>
+    <img class="powered-logo" src="https://i.ibb.co/tMZQCCcM/Capture-d-cran-2025-12-30-210457-removebg-preview.png" alt="SalatCalendar">
+  </a>
+
 <script>
   function debug(msg) {
     const d = new Date();
@@ -343,12 +407,14 @@
   }
 
   const DEFAULT_BG = "https://www.barcelo.com/guia-turismo/wp-content/uploads/2022/10/mezquita-hassan-ii.jpg";
+  // Lien News corrigé avec votre ID
+  const NEWS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6B1oA_44aMOv20OKU4OD608yJt6o9uYH-9kobQ6iodhbPpcuNASvfkesDK5OqK4phDll7d8KgIKmr/pub?gid=0&single=true&output=csv";
   
-  // Config Initiale Vide
+  // Config Initiale - Adhan Maliki par Défaut
   let config = { 
     manualName: "", id: "", bgUrl: DEFAULT_BG,
-    urlFajr: "http://www.islamcan.com/audio/adhan/azan2.mp3",
-    urlNormal: "http://www.islamcan.com/audio/adhan/azan1.mp3"
+    urlFajr: "https://pomf2.lain.la/f/789yiy18.mp3", 
+    urlNormal: "https://pomf2.lain.la/f/r0g8d5s.mp3" 
   };
 
   let currentTimes = {};
@@ -366,19 +432,19 @@
     const inputVal = document.getElementById('startIdInput').value.trim();
     if(!inputVal) { alert("Veuillez entrer un ID valide."); return; }
 
+    let savedConf = saved ? JSON.parse(saved) : {};
+    
     config.id = inputVal;
-    if(saved) {
-       const p = JSON.parse(saved);
-       config = { ...config, ...p, id: inputVal }; 
-    }
+    if(savedConf.urlFajr) config.urlFajr = savedConf.urlFajr;
+    if(savedConf.urlNormal) config.urlNormal = savedConf.urlNormal;
+    if(savedConf.manualName) config.manualName = savedConf.manualName;
+    if(savedConf.bgUrl) config.bgUrl = savedConf.bgUrl;
 
     localStorage.setItem('mawaqitV24', JSON.stringify(config));
     
-    // UI Unlock
     const s = document.getElementById('startScreen');
     s.style.opacity = '0'; setTimeout(() => s.style.display='none', 500);
     
-    // Audio Unlock
     document.getElementById('adhanFajr').load();
     document.getElementById('adhanNormal').load();
     
@@ -390,8 +456,10 @@
     applyConfig();
     updateDate();
     fetchTimes(); 
+    fetchNews(); 
     setInterval(updateClock, 1000);
     setInterval(fetchTimes, 600000); 
+    setInterval(fetchNews, 300000); 
   }
 
   function applyConfig() {
@@ -430,8 +498,66 @@
     closeSettings();
   }
 
-  // --- FETCHING ---
-  const PROXIES = [
+  // --- GOOGLE SHEETS NEWS FETCH - ROBUSTE ---
+  // Utilise plusieurs proxies pour garantir le chargement
+  const PROXIES_NEWS = [
+    (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`, 
+    (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+    (url) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`
+  ];
+
+  async function fetchNews() {
+    debug("Fetch News...");
+    const targetUrl = NEWS_CSV_URL + "&t=" + Date.now(); // Cache bust
+
+    for (let proxyGen of PROXIES_NEWS) {
+        const proxyUrl = proxyGen(targetUrl);
+        try {
+            const res = await fetch(proxyUrl);
+            if(!res.ok) throw new Error("Status " + res.status);
+            
+            let csvText = "";
+            if(proxyUrl.includes("allorigins")) {
+                const json = await res.json();
+                csvText = json.contents;
+            } else {
+                csvText = await res.text();
+            }
+
+            if(csvText && csvText.length > 0) {
+                // Parsing CSV Robuste Ligne par Ligne
+                const lines = csvText.split(/\r?\n/);
+                const newsItems = [];
+                
+                lines.forEach(line => {
+                    if(!line.trim()) return;
+                    let cleanLine = line;
+                    // Retirer les guillemets de début/fin typiques du CSV
+                    if(cleanLine.startsWith('"') && cleanLine.endsWith('"')) {
+                        cleanLine = cleanLine.substring(1, cleanLine.length - 1);
+                    }
+                    // Remplacer les doubles guillemets par un simple
+                    cleanLine = cleanLine.replace(/""/g, '"');
+                    
+                    if(cleanLine.trim()) newsItems.push(cleanLine.trim());
+                });
+
+                if(newsItems.length > 0) {
+                    const finalText = newsItems.join(' • ');
+                    document.getElementById('newsTickerContent').innerText = finalText;
+                    debug("News OK via " + (proxyUrl.includes("corsproxy")?"CorsProxy": (proxyUrl.includes("codetabs")?"CodeTabs":"AllOrigins")));
+                    return; // Succès, on sort de la boucle
+                }
+            }
+        } catch(e) {
+            debug("Err News proxy: " + e.message);
+        }
+    }
+    document.getElementById('newsTickerContent').innerText = "Bienvenue à l'Institut Ihsan • (Erreur chargement news)";
+  }
+
+  // --- FETCHING TIMES ---
+  const PROXIES_TIMES = [
     (url) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}&t=${Date.now()}`,
     (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
     (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`
@@ -442,15 +568,14 @@
     const statusLight = document.getElementById('syncStatus');
     const loadMsg = document.getElementById('loadingMsg');
     
-    // Indicateur Chargement
     statusLight.className = "status-light loading";
     loadMsg.style.display = "inline";
     loadMsg.textContent = "Chargement...";
 
     const targetUrl = `https://www.salatcalendar.com/index.php/EmbededPrayer/prayer_widget/${config.id}/en/2/light`;
     
-    for (let i = 0; i < PROXIES.length; i++) {
-        const proxyGen = PROXIES[i];
+    for (let i = 0; i < PROXIES_TIMES.length; i++) {
+        const proxyGen = PROXIES_TIMES[i];
         const url = proxyGen(targetUrl);
         
         try {
@@ -481,7 +606,6 @@
                 renderTimes();
                 recalcNextPrayer();
                 
-                // Indicateur Succès
                 statusLight.className = "status-light ok";
                 loadMsg.style.display = "none";
                 debug("Succès Proxy #" + (i+1));
@@ -492,7 +616,6 @@
         }
     }
     
-    // Indicateur Erreur
     statusLight.className = "status-light error";
     loadMsg.style.display = "inline";
     loadMsg.textContent = "Erreur de connexion";
@@ -575,7 +698,6 @@
         cdEl.textContent = "--:--:--";
     }
     
-    // Active Tile & Audio
     const curMins = now.getHours() * 60 + now.getMinutes();
     const ids = ['fajr','dohr','asr','maghrib','isha'];
     let activeId = 'fajr';
